@@ -3,53 +3,47 @@ package com.example.library.controller;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.library.config.JwtUtil;
+import com.example.library.dto.UserDto;
+import com.example.library.entity.AppUser;
+import com.example.library.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+@RestController
+@RequestMapping("/api/auth")
+@RequiredArgsConstructor
+public class AuthController {
+    private final UserRepository userRepo;
+    private final PasswordEncoder encoder;
+    private final JwtUtil jwtUtil;
+    private final AuthenticationManager authManager;
 
-// @RestController
-// @RequestMapping("/api/auth")
-// public class AuthController {
-//     private final UserDetailsService uds;
-//     private final PasswordEncoder encoder;
-//     private final JwtUtil jwtUtil;
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody UserDto req) {
+        if (userRepo.findByUsername(req.getUsername()).isPresent()) {
+            return ResponseEntity.badRequest().body("Username already exists");
+        }
+        AppUser user = new AppUser();
+        user.setUsername(req.getUsername());
+        user.setPassword(encoder.encode(req.getPassword()));
+        userRepo.save(user);
+        return ResponseEntity.ok("User registered");
+    }
 
-//     public AuthController(UserDetailsService uds, PasswordEncoder encoder, JwtUtil jwtUtil) {
-//         this.uds = uds;
-//         this.encoder = encoder;
-//         this.jwtUtil = jwtUtil;
-//     }
-
-//     record AuthRequest(String username, String password) {
-//     }
-
-//     record AuthResponse(String token) {
-//     }
-
-//     @PostMapping("/login")
-//     public ResponseEntity<?> login(@RequestBody AuthRequest req) {
-//         try {
-//             UserDetails ud = uds.loadUserByUsername(req.username());
-//             if (ud == null)
-//                 return ResponseEntity.status(401).build();
-
-//             // check password (works for InMemoryUserDetailsManager with encoded password)
-//             if (!encoder.matches(req.password(), ud.getPassword())) {
-//                 return ResponseEntity.status(401).build();
-//             }
-
-//             var token = jwtUtil.generateToken(ud.getUsername(), Map.of("roles", ud.getAuthorities().toString()));
-//             return ResponseEntity.ok(new AuthResponse(token));
-
-//         } catch (Exception ex) {
-//             return ResponseEntity.status(401).build();
-//         }
-//     }
-// }
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UserDto req) {
+        UsernamePasswordAuthenticationToken authToken =
+                new UsernamePasswordAuthenticationToken(req.getUsername(), req.getPassword());
+        authManager.authenticate(authToken);
+        String token = jwtUtil.generateToken(req.getUsername());
+        return ResponseEntity.ok(Map.of("token", token));
+    }
+}

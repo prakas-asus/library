@@ -21,7 +21,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class User {
+public class AppUser {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,19 +32,10 @@ public class User {
     @Column(nullable = false)
     private String username;
 
-    @NotBlank(message = "Nama tidak boleh kosong")
-    @Size(min = 3, max = 50, message = "Nama harus 3-50 karakter")
-    @Column(nullable = false)
-    private String nama;
-
-    @NotNull(message = "Tanggal lahir tidak boleh kosong")
-    @Past(message = "Tanggal lahir harus di masa lalu")
-    @Column(name = "tanggal_lahir", nullable = false)
-    private LocalDate tanggalLahir;
-
-    @NotBlank(message = "Address tidak boleh kosong")
-    @Column(nullable = false)
-    private String address;
+    // @NotBlank(message = "Nama tidak boleh kosong")
+    // @Size(min = 3, max = 50, message = "Nama harus 3-50 karakter")
+    // @Column(nullable = false)
+    // private String nama;
 
     @NotBlank(message = "Password tidak boleh kosong")
     @Size(min = 6, message = "Password minimal 6 karakter")
