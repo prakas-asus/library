@@ -22,3 +22,17 @@
 # 2. Belajar forwarding port agar bisa di akses keluar internet
 ## port disamakan dengan port terakhir
     - ssh -R 80:localhost:80 serveo.net
+
+## Catatan :
+
+GET /api/whitelist — daftar semua whitelisted stores (global)
+
+GET /api/whitelist/province/{provinceName} — daftar whitelisted stores di province tertentu
+
+POST /api/whitelist — tambahkan store ke whitelist (by storeId)
+
+PUT /api/whitelist/{storeId} — update flag whitelisted (true/false)
+
+DELETE /api/whitelist/{storeId} — hapus store dari whitelist (set whitelisted=false)
+
+(opsional) CRUD dasar untuk Provinces / Branches / Stores — contoh singkat
