@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import com.example.library.repository.StoresRepository;
 
 import lombok.RequiredArgsConstructor;
+
+import com.example.library.dto.ProvinceByStoreDto;
 import com.example.library.entity.Stores;
 
 @Service
@@ -16,5 +18,9 @@ public class StoresService {
 
     public List<Stores> searchByProvinceName(String province) {
         return storeRepo.findActiveByProvinceNameOrWhitelisted(province);
+    }
+
+    public List<ProvinceByStoreDto> searchStoresByProvinces(String province, String store) {
+        return storeRepo.findByBranch_Province_NameContainingIgnoreCaseAndNameContainingIgnoreCase(province, store);
     }
 }

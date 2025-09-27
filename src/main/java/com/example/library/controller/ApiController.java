@@ -17,6 +17,8 @@ import com.example.library.service.StoresService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 
+import com.example.library.dto.ProvinceByStoreDto;
+import com.example.library.dto.SearchStoresDto;
 import com.example.library.entity.Branches;
 import com.example.library.entity.Stores;
 
@@ -29,8 +31,8 @@ public class ApiController {
     private final BranchesService branchService;
 
     @GetMapping("/stores/search")
-    public List<Stores> searchStores(@RequestParam String province) {
-        return storeService.searchByProvinceName(province);
+    public List<ProvinceByStoreDto> searchStores(@RequestBody SearchStoresDto request) {
+        return storeService.searchStoresByProvinces(request.getProvince(), request.getStore());
     }
 
     @PutMapping("/branches/{id}")
