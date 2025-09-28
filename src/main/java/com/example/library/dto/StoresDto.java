@@ -9,7 +9,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class StoresDto {
     
-    private Long id;
     private String name;
     private boolean active;
     private boolean deleted;

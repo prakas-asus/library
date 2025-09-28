@@ -55,18 +55,15 @@ public class StoresService {
         store.setActive(storeDto.isActive());
         store.setDeleted(storeDto.isDeleted());
         store.setWhitelisted(storeDto.isWhitelisted());
-        store.setBranch(branchesRepository.findByName(storeDto.getBranchName()).get()); // Assuming branch update is handled separately
+        store.setBranch(storeDto.getBranchName() != null ? branchesRepository.findByName(storeDto.getBranchName()).get() : null ); // Assuming branch update is handled separately
         storeRepo.save(store);
 
         StoresDto result = new StoresDto();
-        result.setId(store.getId());
         result.setName(store.getName());
         result.setActive(store.isActive());
         result.setDeleted(store.isDeleted());
         result.setWhitelisted(store.isWhitelisted());
-        if (store.getBranch() != null) {
-            result.setBranchName(store.getBranch().getName());
-        }
+        result.setBranchName(store.getBranch() != null ? store.getBranch().getName() : null);
         return result;
     }
 }
