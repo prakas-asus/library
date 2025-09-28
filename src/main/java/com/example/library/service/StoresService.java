@@ -44,6 +44,7 @@ public class StoresService {
         Stores store = storeRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Store not found with id: " + id));
         store.setDeleted(true);
         storeRepo.save(store);
+        storeRepo.delete(store);
         return "Store with id: " + id + " has been marked as deleted.";
     }
 

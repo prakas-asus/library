@@ -61,6 +61,7 @@ public class BranchesService {
                 .orElseThrow(() -> new EntityNotFoundException("Branch not found"));
         b.setDeleted(true); 
         branchRepo.save(b);
+        branchRepo.delete(b);
         return "Branch with id " + b.getId() + " and name " + b.getName() + " deleted successfully";
     }
 
