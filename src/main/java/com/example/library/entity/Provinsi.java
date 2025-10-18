@@ -20,18 +20,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Provinces {
+public class Provinsi {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String namaProvinsi;
 
-    private boolean active = true;
-    
-    private boolean deleted = false;
-
-    @OneToMany(mappedBy = "province", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Branches> branches = new ArrayList<>();
+    @OneToMany(mappedBy = "provinsi")
+    private List<Kota> kotaList = new ArrayList<>();
 }

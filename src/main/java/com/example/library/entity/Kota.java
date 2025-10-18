@@ -8,27 +8,21 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "Stores")
+@Table(name = "kota")
 @Getter
 @Setter
-@NoArgsConstructor
-public class Stores {
+public class Kota {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-
-    private boolean active = true;
-    private boolean deleted = false;
-
-    private boolean whitelisted = false;
+    private String namaKota;
 
     @ManyToOne
-    @JoinColumn(name = "branch_id")
-    private Branches branch;
+    @JoinColumn(name = "provinsi_id")
+    private Provinsi provinsi;
 }
