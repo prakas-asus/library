@@ -45,8 +45,6 @@ public class SessionService {
     }
 
     public boolean isValidSession(String token) {
-        return sessionRepository.findBySessionToken(token)
-                .map(session -> session.isActive() && session.getExpiresAt().isAfter(LocalDateTime.now()))
-                .orElse(false);
+        return !sessionRepository.findBySessionToken(token).get().getSessionToken().isEmpty() && token != null ? true : false;
     }
 }
