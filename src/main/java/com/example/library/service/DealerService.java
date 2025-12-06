@@ -3,6 +3,7 @@ package com.example.library.service;
 import com.example.library.dto.DealerDto;
 import com.example.library.entity.Dealer;
 import com.example.library.repository.DealerRepository;
+import com.example.library.specification.DealerSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -85,5 +86,10 @@ public class DealerService {
         return value == null ? "" : value.toString();
     }
 
-
+    public List<DealerDto> searchByAddress(String keyword) {
+        return dealerRepository.findAll(DealerSpecification.addressContains(keyword))
+                .stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
 }

@@ -78,4 +78,9 @@ public class DealerController {
                 .contentType(MediaType.parseMediaType("text/csv"))
                 .body(csvData);
     }
+
+    @GetMapping("/find/address")
+    public ResponseEntity<List<DealerDto>> findByAddress(@RequestParam String keyword) {
+        return ResponseEntity.ok(dealerService.searchByAddress(keyword));
+    }
 }
