@@ -53,27 +53,37 @@ public class DealerService {
     }
 
     public byte[] exportToCsv(List<DealerDto> dealers) {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        PrintWriter writer = new PrintWriter(outputStream);
-        
-        writer.println("ID,Nama Dealer,Address,Latitude,Longitude,No Telepon,Email,Rating,Jam Operasional,Nama Kota,Nama Provinsi");
-        
+        StringBuilder csv = new StringBuilder();
+
+        // Gunakan ; sebagai delimiter
+        csv.append("ID;Nama Dealer;Address;Latitude;Longitude;No Telepon;Email;Rating;Jam Operasional;Nama Kota;Nama Provinsi\r\n");
+
         for (DealerDto dealer : dealers) {
-            writer.printf("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s%n",
-                dealer.getId(),
-                dealer.getNamaDealer(),
-                dealer.getAddress(),
-                dealer.getLatitude(),
-                dealer.getLongitude(),
-                dealer.getNoTelepon(),
-                dealer.getEmail(),
-                dealer.getRating(),
-                dealer.getJamOperasional(),
-                dealer.getNamaKota(),
-                dealer.getNamaProvinsi());
+            csv.append(safeVal(dealer.getId())).append(";")
+                    .append(csvVal(dealer.getNamaDealer())).append(";")
+                    .append(csvVal(dealer.getAddress())).append(";")
+                    .append(safeVal(dealer.getLatitude())).append(";")
+                    .append(safeVal(dealer.getLongitude())).append(";")
+                    .append(csvVal(dealer.getNoTelepon())).append(";")
+                    .append(csvVal(dealer.getEmail())).append(";")
+                    .append(safeVal(dealer.getRating())).append(";")
+                    .append(csvVal(dealer.getJamOperasional())).append(";")
+                    .append(csvVal(dealer.getNamaKota())).append(";")
+                    .append(csvVal(dealer.getNamaProvinsi()))
+                    .append("\r\n");
         }
-        
-        writer.flush();
-        return outputStream.toByteArray();
+
+        return csv.toString().getBytes();
     }
+
+    private String csvVal(String value) {
+        if (value == null) return "\"\"";
+        return "\"" + value.replace("\"", "\"\"") + "\"";
+    }
+
+    private String safeVal(Object value) {
+        return value == null ? "" : value.toString();
+    }
+
+
 }

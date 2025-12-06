@@ -67,4 +67,15 @@ public class DealerController {
         
         return new ResponseEntity<>(csvData, headers, HttpStatus.OK);
     }
+
+    @GetMapping("/export/csv/v1")
+    public ResponseEntity<byte[]> downloadCsvV1() {
+        List<DealerDto> dealers = dealerService.getAllDealers();
+        byte[] csvData = dealerService.exportToCsv(dealers);
+        
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=dealers.csv")
+                .contentType(MediaType.parseMediaType("text/csv"))
+                .body(csvData);
+    }
 }
