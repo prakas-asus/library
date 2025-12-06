@@ -5,7 +5,9 @@ import com.example.library.entity.Dealer;
 import com.example.library.service.DealerService;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,5 +54,17 @@ public class DealerController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/export/csv")
+    public ResponseEntity<byte[]> downloadCsv() {
+        List<DealerDto> dealers = dealerService.getAllDealers();
+        byte[] csvData = dealerService.exportToCsv(dealers);
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("text/csv"));
+        headers.setContentDispositionFormData("attachment", "dealers.csv");
+        
+        return new ResponseEntity<>(csvData, headers, HttpStatus.OK);
     }
 }

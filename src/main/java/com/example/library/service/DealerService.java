@@ -6,6 +6,8 @@ import com.example.library.repository.DealerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,5 +52,28 @@ public class DealerService {
         dealerRepository.deleteById(id);
     }
 
-
+    public byte[] exportToCsv(List<DealerDto> dealers) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintWriter writer = new PrintWriter(outputStream);
+        
+        writer.println("ID,Nama Dealer,Address,Latitude,Longitude,No Telepon,Email,Rating,Jam Operasional,Nama Kota,Nama Provinsi");
+        
+        for (DealerDto dealer : dealers) {
+            writer.printf("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s%n",
+                dealer.getId(),
+                dealer.getNamaDealer(),
+                dealer.getAddress(),
+                dealer.getLatitude(),
+                dealer.getLongitude(),
+                dealer.getNoTelepon(),
+                dealer.getEmail(),
+                dealer.getRating(),
+                dealer.getJamOperasional(),
+                dealer.getNamaKota(),
+                dealer.getNamaProvinsi());
+        }
+        
+        writer.flush();
+        return outputStream.toByteArray();
+    }
 }
