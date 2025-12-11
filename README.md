@@ -22,3 +22,23 @@
 # 2. Belajar forwarding port agar bisa di akses keluar internet
 ## port disamakan dengan port terakhir
     - ssh -R 80:localhost:80 serveo.net
+# 3. buat dalam satu jaringan elastic dan kibana
+    docker network create elastic-net
+# 4. elasticsearch
+## install elasticsearch
+  docker run -d --name elasticsearch \
+  --network elastic-net \
+  -p 9200:9200 -p 9300:9300 \
+  -e discovery.type=single-node \
+  -e xpack.security.enabled=false \
+  -e ES_JAVA_OPTS="-Xms1g -Xmx1g" \
+  -v esdata:/usr/share/elasticsearch/data \
+  docker.elastic.co/elasticsearch/elasticsearch:8.15.0
+# 5. kibana
+## install kibana
+  docker run -d --name kibana \
+  --network elastic-net \
+  -p 5601:5601 \
+  -e ELASTICSEARCH_HOSTS=http://elasticsearch:9200 \
+  docker.elastic.co/kibana/kibana:8.15.0
+
