@@ -19,7 +19,7 @@ public class SessionService {
     private final SessionRepository sessionRepository;
 
     public Optional<Session> findByToken(String token) {
-        return sessionRepository.findBySessionToken(token);
+        return sessionRepository.findBySessionAccessToken(token);
     }
 
     public List<Session> getActiveSessionsByUser(Long userId) {
@@ -31,13 +31,12 @@ public class SessionService {
         session.setCreatedAt(LocalDateTime.now());
         session.setExpiresAt(LocalDateTime.now().plusHours(24));
         session.setActive(true);
-        session.setSessionToken(session.getSessionToken());
         sessionRepository.save(session);
     }
 
     @Transactional
     public void invalidateSession(String token) {
-        sessionRepository.findBySessionToken(token)
+        sessionRepository.findBySessionAccessToken(token)
                 .ifPresent(session -> {
                     session.setActive(false);
                     sessionRepository.save(session);
@@ -45,6 +44,6 @@ public class SessionService {
     }
 
     public boolean isValidSession(String token) {
-        return !sessionRepository.findBySessionToken(token).get().getSessionToken().isEmpty() && token != null ? true : false;
+        return !sessionRepository.findBySessionAccessToken(token).get().getSessionAccessToken().isEmpty() && token != null ? true : false;
     }
 }

@@ -39,8 +39,16 @@ public class AuthService {
          UsernamePasswordAuthenticationToken authToken =
                 new UsernamePasswordAuthenticationToken(req.getUsername(), req.getPassword());
         authManager.authenticate(authToken);
-        String token = jwtUtil.generateToken(req.getUsername());
-        sessionService.createSession(Session.builder().sessionToken(token).build(), userRepo.findByUsername(req.getUsername()).get());
-        return Map.of("token", token);
+        
+        String accessToken = jwtUtil.generateToken(req.getUsername());
+        String refreshToken = jwtUtil.generateRefreshToken(req.getUsername());
+        
+        AppUser user = userRepo.findByUsername(req.getUsername()).get();
+        sessionService.createSession(Session.builder()
+                .sessionAccessToken(accessToken)
+                .sessionRefreshToken(refreshToken)
+                .build(), user);
+        
+        return Map.of("accessToken", accessToken, "refreshToken", refreshToken);
     }
 }

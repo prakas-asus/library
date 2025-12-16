@@ -22,7 +22,10 @@ public class Session {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String sessionToken;
+    private String sessionAccessToken;
+
+    @Column(unique = true, nullable = false)
+    private String sessionRefreshToken;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;

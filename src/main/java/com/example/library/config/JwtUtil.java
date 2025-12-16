@@ -26,7 +26,8 @@ public class JwtUtil {
 
     // private final String SECRET = "RahasiaSuperAman123"; // gunakan env/secret
     // manager di produksi
-    private final long EXPIRATION = 1000 * 60 * 60; // 1 jam
+    private final long EXPIRATION = 1000 * 60 * 15; // 15 menit
+    private final long REFRESH_EXPIRATION = 1000 * 60 * 60 * 24 * 7; // 7 hari
 
     @Value("${jwt.secret}") // ambil dari application.properties
     private String secret;
@@ -43,6 +44,15 @@ public class JwtUtil {
                 .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String generateRefreshToken(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_EXPIRATION))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

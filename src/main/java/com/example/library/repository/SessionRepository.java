@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SessionRepository extends JpaRepository<Session, Long> {
-    Optional<Session> findBySessionToken(String sessionToken);
+    Optional<Session> findBySessionAccessToken(String sessionToken);
     List<Session> findByUserIdAndActiveTrue(Long userId);
-    void deleteBySessionToken(String sessionToken);
+//    void deleteBySessionToken(String sessionToken);
 }
